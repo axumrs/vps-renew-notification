@@ -1,5 +1,6 @@
 <script setup lang="ts" name="LogoutPage">
 import Button from "@/components/Button.vue";
+import Mask from "@/components/Mask.vue";
 
 const cancelHandler = () => {
   window.history.back();
@@ -7,7 +8,7 @@ const cancelHandler = () => {
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-black/70">
+  <Mask>
     <div
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded shadow min-w-64"
     >
@@ -17,5 +18,5 @@ const cancelHandler = () => {
         <Button @click="cancelHandler">取消</Button>
       </div>
     </div>
-  </div>
+  </Mask>
 </template>
