@@ -4,5 +4,13 @@ import vps from "./vps";
 
 export default createRouter({
   history: createWebHistory(),
-  routes: [provider, vps],
+  routes: [
+    {
+      name: "logout",
+      path: "/logout",
+      component: () => import("@/pages/Logout.vue"),
+    },
+    provider,
+    vps,
+  ],
 });
