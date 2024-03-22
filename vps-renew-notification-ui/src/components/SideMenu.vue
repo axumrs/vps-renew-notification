@@ -10,6 +10,11 @@ const menu: Menu[] = [
     expand: true,
     children: [
       {
+        id: "vps-renew",
+        label: "VPS续期",
+        href: "/vps/renew",
+      },
+      {
         id: "vps-list",
         label: "VPS列表",
         href: "/vps",

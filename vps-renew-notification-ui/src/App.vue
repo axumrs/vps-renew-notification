@@ -4,7 +4,7 @@ import Login from "@/components/Login.vue";
 import Mask from "@/components/Mask.vue";
 import { ref } from "vue";
 
-const isLogined = ref(!true);
+const isLogined = ref(true);
 </script>
 
 <template>

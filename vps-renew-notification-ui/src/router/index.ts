@@ -6,6 +6,10 @@ export default createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: "/",
+      redirect: "/vps/renew",
+    },
+    {
       name: "logout",
       path: "/logout",
       component: () => import("@/pages/Logout.vue"),

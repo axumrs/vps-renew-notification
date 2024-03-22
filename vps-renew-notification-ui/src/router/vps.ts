@@ -12,5 +12,10 @@ export default {
       path: "add",
       component: () => import("@/pages/Vps/Input.vue"),
     },
+    {
+      name: "vps-renew",
+      path: "renew",
+      component: () => import("@/pages/Vps/Renew.vue"),
+    },
   ],
 };
