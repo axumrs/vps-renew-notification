@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Layout from "@/components/Layout.vue";
+</script>
 
 <template>
-  <div class="text-red-600 text-xl">Hello, 世界</div>
+  <Layout>
+    <RouterView />
+  </Layout>
 </template>
