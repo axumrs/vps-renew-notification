@@ -9,7 +9,7 @@ import SideMenu from "./SideMenu.vue";
       </h2>
       <SideMenu />
     </aside>
-    <main class="col-span-10 bg-red-50">
+    <main class="col-span-10 p-6">
       <slot></slot>
     </main>
   </div>
