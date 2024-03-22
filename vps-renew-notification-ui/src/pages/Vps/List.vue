@@ -26,7 +26,7 @@ import Button from "@/components/Button.vue";
           <td>
             <div>
               <Button theme="primary" size="xs">续期</Button>
-              <Button theme="info" size="xs">修改</Button>
+              <Button theme="info" size="xs" href="/vps/edit/1">修改</Button>
               <Button theme="danger" size="xs">删除</Button>
             </div>
           </td>

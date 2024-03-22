@@ -1,11 +1,17 @@
 <script setup lang="ts" name="VpsInputPage">
+import { useRoute } from "vue-router";
 import PageTitle from "@/components/PageTitle.vue";
 import Input from "@/components/Input.vue";
 import Form from "@/components/Form.vue";
+
+const r = useRoute();
+const { id } = r.params;
+
+const title = id ? "修改" : "添加";
 </script>
 
 <template>
-  <PageTitle>添加VPS</PageTitle>
+  <PageTitle>{{ title }}VPS</PageTitle>
 
   <Form>
     <Input label="名称" />
