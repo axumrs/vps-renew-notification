@@ -3,9 +3,14 @@ export default {
   path: "/provider",
   children: [
     {
+      name: "provider-list",
+      path: "",
+      component: () => import("@/pages/Provider/List.vue"),
+    },
+    {
       name: "provider-add",
       path: "add",
-      component: () => import("@/pages/provider/Provider/Input.vue"),
+      component: () => import("@/pages/Provider/Input.vue"),
     },
   ],
 };

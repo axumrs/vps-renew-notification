@@ -1,13 +1,17 @@
 <script setup lang="ts" name="Button">
+import { type RouteLocationRaw } from "vue-router";
 const props = withDefaults(
   defineProps<{
     type?: "button" | "submit" | "reset";
     class?: string;
     size?: "xs" | "lg";
     theme?: "primary" | "warning" | "danger" | "info";
+    href?: RouteLocationRaw;
   }>(),
   { class: "" }
 );
+
+const emit = defineEmits(["click"]);
 
 let sizeCss = "px-2 py-1";
 let themeCss = "hover:bg-gray-50";
@@ -40,7 +44,19 @@ switch (props.theme) {
 </script>
 
 <template>
-  <button :class="`border ${sizeCss} ${themeCss} ${props.class}`" :type="type">
+  <RouterLink
+    :to="href"
+    v-if="href"
+    :class="`border ${sizeCss} ${themeCss} ${props.class}`"
+    @click.prevent="emit('click')"
+    ><slot></slot
+  ></RouterLink>
+  <button
+    :class="`border ${sizeCss} ${themeCss} ${props.class}`"
+    :type="type"
+    @click="emit('click')"
+    v-else
+  >
     <slot></slot>
   </button>
 </template>

@@ -6,4 +6,19 @@
   body {
     @apply font-light text-gray-900;
   }
+  table {
+    @apply w-full;
+  }
+  thead {
+    @apply border-b bg-gray-50;
+  }
+  th {
+    @apply text-start;
+  }
+  tbody > tr {
+    @apply even:bg-gray-50;
+  }
+  td > div {
+    @apply flex justify-start items-center gap-x-2;
+  }
 }

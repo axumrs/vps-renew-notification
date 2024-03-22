@@ -1,7 +1,6 @@
 <script setup lang="ts" name="ProviderInputPage">
 import PageTitle from "@/components/PageTitle.vue";
 import Input from "@/components/Input.vue";
-
 import Form from "@/components/Form.vue";
 </script>
 
