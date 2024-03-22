@@ -10,6 +10,16 @@ export default createRouter({
       path: "/logout",
       component: () => import("@/pages/Logout.vue"),
     },
+    {
+      name: "change-password",
+      path: "/change-password",
+      component: () => import("@/pages/ChangePassword.vue"),
+    },
+    {
+      name: "notification",
+      path: "/notification",
+      component: () => import("@/pages/Notification.vue"),
+    },
     provider,
     vps,
   ],
