@@ -16,7 +16,12 @@ pub fn auth(state: Arc<AppState>) -> Router {
 
 pub fn provider(state: Arc<AppState>) -> Router {
     Router::new()
-        .route("/", get(handler::provider::list))
+        .route(
+            "/",
+            get(handler::provider::list)
+                .post(handler::provider::add)
+                .put(handler::provider::edit),
+        )
         .with_state(state)
 }
 

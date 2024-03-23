@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "providers" ( -- 服务商
     "id" CHAR(20) PRIMARY KEY,
     "name" VARCHAR(50) NOT NULL,
     "renew_days" INTEGER NOT NULL, -- 续期天数
-    "notify_dasy" INTEGER NOT NULL, -- 通知天数
+    "notify_days" INTEGER NOT NULL, -- 通知天数
     "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

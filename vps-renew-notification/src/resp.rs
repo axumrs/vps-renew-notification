@@ -32,3 +32,12 @@ impl JsonResp<()> {
         Self::failed(err.code(), err.message)
     }
 }
+
+#[derive(Deserialize, Serialize)]
+pub struct IDResp {
+    pub id: String,
+}
+#[derive(Deserialize, Serialize)]
+pub struct AffResp {
+    pub aff: u64,
+}

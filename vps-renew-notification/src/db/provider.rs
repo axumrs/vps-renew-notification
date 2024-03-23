@@ -19,10 +19,10 @@ pub async fn create<'a>(c: impl PgExecutor<'a>, m: &'a model::Provider) -> Resul
 
 pub async fn update<'a>(c: impl PgExecutor<'a>, m: &'a model::Provider) -> Result<u64> {
     let r = query("UPDATE providers SET name=$1, renew_days = $2, notify_days = $3 WHERE id=$4")
-        .bind(&m.id)
         .bind(&m.name)
         .bind(&m.renew_days)
         .bind(&m.notify_days)
+        .bind(&m.id)
         .execute(c)
         .await?;
     Ok(r.rows_affected())
