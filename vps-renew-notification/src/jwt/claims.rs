@@ -54,5 +54,5 @@ impl<T: Serialize + DeserializeOwned> Claims<T> {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserClaimsData {
     pub id: String,
-    pub email: String,
+    pub username: String,
 }
