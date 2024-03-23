@@ -130,3 +130,66 @@ pub async fn del(
         .map_err(log_error(handler_name))?;
     Ok(Json(JsonResp::ok(AffResp { aff })))
 }
+
+pub async fn renew(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> Result<Json<JsonResp<AffResp>>> {
+    let handler_name = "vps/del";
+    let pool = get_conn(&state);
+    let mut tx = pool
+        .begin()
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+
+    let v = db::vps::find(&mut *tx, &id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    if v.is_none() {
+        tx.rollback()
+            .await
+            .map_err(Error::from)
+            .map_err(log_error(handler_name))?;
+        return Err(Error::not_exists("不存在的VPS"));
+    }
+    let v = v.unwrap();
+
+    // 查找续期时间
+    let provider = db::provider::find(&mut *tx, &v.provider_id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    if provider.is_none() {
+        tx.rollback()
+            .await
+            .map_err(Error::from)
+            .map_err(log_error(handler_name))?;
+        return Err(Error::not_exists("不存在的服务商"));
+    }
+    let provider = provider.unwrap();
+
+    // 修改时间
+    let duration = chrono::TimeDelta::try_days(provider.renew_days as i64).unwrap();
+    let expire = v.expire + duration;
+
+    let v = model::VPS { expire, ..v };
+    let aff = match db::vps::update(&mut *tx, &v).await {
+        Ok(aff) => aff,
+        Err(err) => {
+            tx.rollback()
+                .await
+                .map_err(Error::from)
+                .map_err(log_error(handler_name))?;
+            tracing::error!("{handler_name} - {:?}", err);
+            return Err(Error::from(err));
+        }
+    };
+
+    tx.commit()
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    Ok(Json(JsonResp::ok(AffResp { aff })))
+}

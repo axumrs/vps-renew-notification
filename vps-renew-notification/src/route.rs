@@ -37,7 +37,12 @@ pub fn vps(state: Arc<AppState>) -> Router {
                 .post(handler::vps::add)
                 .put(handler::vps::edit),
         )
-        .route("/:id", get(handler::vps::find).delete(handler::vps::del))
+        .route(
+            "/:id",
+            get(handler::vps::find)
+                .delete(handler::vps::del)
+                .patch(handler::vps::renew),
+        )
         .with_state(state)
 }
 
