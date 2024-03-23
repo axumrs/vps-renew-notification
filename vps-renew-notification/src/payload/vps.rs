@@ -33,3 +33,16 @@ pub struct AddVps {
 
     pub expire: String,
 }
+#[derive(Deserialize, Validate)]
+pub struct EditVps {
+    #[validate(length(min = 20, max = 20, message = "请输入正确的ID"))]
+    pub id: String,
+
+    #[validate(length(min = 20, max = 20, message = "请输入正确的ID"))]
+    pub provider_id: String,
+
+    #[validate(length(min = 1, max = 50, message = "请输入正确的名称"))]
+    pub name: String,
+
+    pub expire: String,
+}

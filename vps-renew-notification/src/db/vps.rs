@@ -22,6 +22,7 @@ pub async fn update<'a>(c: impl PgExecutor<'a>, m: &'a model::VPS) -> Result<u64
         .bind(&m.provider_id)
         .bind(&m.name)
         .bind(&m.expire)
+        .bind(&m.id)
         .execute(c)
         .await?;
     Ok(r.rows_affected())
