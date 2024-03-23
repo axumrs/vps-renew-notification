@@ -1,3 +1,6 @@
+use serde::Deserialize;
+
+#[derive(Deserialize)]
 pub struct ProviderListFilter {
     pub name: Option<String>,
     pub sort: Option<String>,

@@ -1,18 +1,40 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Path, State},
-    response::IntoResponse,
+    extract::{Path, Query, State},
     Json,
 };
 use validator::Validate;
 
-use crate::{db, model, payload, AffResp, AppState, Error, IDResp, JsonResp, Result};
+use crate::{db, filter, model, payload, AffResp, AppState, Error, IDResp, JsonResp, Result};
 
 use super::helper::{get_conn, log_error};
 
-pub async fn list() -> impl IntoResponse {
-    "provider list"
+pub async fn list(
+    State(state): State<Arc<AppState>>,
+    Query(p): Query<payload::ListProvider>,
+) -> Result<Json<JsonResp<Vec<model::Provider>>>> {
+    let handler_name = "provider/list";
+    let pool = get_conn(&state);
+    let sort: Option<String> = if let Some(s) = p.sort {
+        Some(
+            match s {
+                payload::ListProviderSort::ID => "id",
+                payload::ListProviderSort::IDDesc => "id DESC",
+                payload::ListProviderSort::Name => "name",
+                payload::ListProviderSort::NameDesc => "name DESC",
+            }
+            .to_string(),
+        )
+    } else {
+        None
+    };
+    let f = filter::ProviderListFilter { name: p.name, sort };
+    let data = db::provider::list(&*pool, &f)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    Ok(Json(JsonResp::ok(data)))
 }
 
 pub async fn add(

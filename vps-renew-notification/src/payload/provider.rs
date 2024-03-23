@@ -27,3 +27,24 @@ pub struct EditProvider {
     #[validate(range(min = 1, message = "请输入正确的通知时间"))]
     pub notify_days: i32,
 }
+
+#[derive(Deserialize)]
+pub enum ListProviderSort {
+    #[serde(rename = "name")]
+    Name,
+
+    #[serde(rename = "name_desc")]
+    NameDesc,
+
+    #[serde(rename = "id")]
+    ID,
+
+    #[serde(rename = "id_desc")]
+    IDDesc,
+}
+
+#[derive(Deserialize)]
+pub struct ListProvider {
+    pub name: Option<String>,
+    pub sort: Option<ListProviderSort>,
+}
