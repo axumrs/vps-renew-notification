@@ -22,6 +22,10 @@ pub fn provider(state: Arc<AppState>) -> Router {
                 .post(handler::provider::add)
                 .put(handler::provider::edit),
         )
+        .route(
+            "/:id",
+            get(handler::provider::find).delete(handler::provider::del),
+        )
         .with_state(state)
 }
 

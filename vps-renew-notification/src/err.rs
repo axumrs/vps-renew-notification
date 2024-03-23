@@ -10,6 +10,7 @@ pub enum Kind {
     Validate,
     IncorrectAuth,
     Bcrypt,
+    NotExists,
 }
 
 #[derive(Debug)]
@@ -41,6 +42,9 @@ impl Error {
     }
     pub fn incorrect_auth() -> Self {
         Self::from_str(Kind::IncorrectAuth, "用户名/密码错误")
+    }
+    pub fn not_exists(msg: &str) -> Self {
+        Self::from_str(Kind::NotExists, msg)
     }
     pub fn code(&self) -> i32 {
         -1

@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
-use axum::{extract::State, response::IntoResponse, Json};
+use axum::{
+    extract::{Path, State},
+    response::IntoResponse,
+    Json,
+};
 use validator::Validate;
 
 use crate::{db, model, payload, AffResp, AppState, Error, IDResp, JsonResp, Result};
@@ -64,5 +68,40 @@ pub async fn edit(
         .map_err(Error::from)
         .map_err(log_error(handler_name))?;
 
+    Ok(Json(JsonResp::ok(AffResp { aff })))
+}
+
+pub async fn find(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> Result<Json<JsonResp<model::Provider>>> {
+    let handler_name = "provider/del";
+
+    let pool = get_conn(&state);
+
+    let p = db::provider::find(&*pool, &id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+
+    if p.is_none() {
+        return Err(Error::not_exists("不存在的服务商"));
+    }
+
+    Ok(Json(JsonResp::ok(p.unwrap())))
+}
+
+pub async fn del(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> Result<Json<JsonResp<AffResp>>> {
+    let handler_name = "provider/del";
+
+    let pool = get_conn(&state);
+
+    let aff = db::provider::delete(&*pool, &id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
     Ok(Json(JsonResp::ok(AffResp { aff })))
 }
