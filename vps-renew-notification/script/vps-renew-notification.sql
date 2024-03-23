@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS "providers" ( -- 服务商
+    "id" CHAR(20) PRIMARY KEY,
+    "name" VARCHAR(50) NOT NULL,
+    "renew_days" INTEGER NOT NULL, -- 续期天数
+    "notify_dasy" INTEGER NOT NULL, -- 通知天数
+    "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "vpss" ( -- VPS
+    "id" CHAR(20) PRIMARY KEY,
+    "provider_id" CHAR(20) NOT NULL, -- 服务商ID
+    "name" VARCHAR(50) NOT NULL, -- 名称
+    "expire" TIMESTAMPTZ NOT NULL, -- 过去时间
+    "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "users" ( -- 用户
+    "id" CHAR(20) PRIMARY KEY,
+    "username" VARCHAR(50) NOT NULL, -- 用户名
+    "password" VARCHAR(255) NOT NULL, -- 密码
+    "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
