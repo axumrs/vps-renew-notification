@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS "users" ( -- 用户
     "id" CHAR(20) PRIMARY KEY,
     "username" VARCHAR(50) NOT NULL, -- 用户名
     "password" VARCHAR(255) NOT NULL, -- 密码
-    "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "dateline" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(username)
 );
 
 INSERT INTO users(id,username,password,dateline) VALUES ('cnv6hv4drfapni9tr4p0', 'axum.rs', '$2b$12$.meDv8XTuGC.HgYLSKohlejbsK80V2MhA/J.m838uIp88ytjd8qtS', '2024-03-23 05:30:36.310579+00');

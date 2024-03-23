@@ -20,6 +20,7 @@ pub async fn update<'a>(c: impl PgExecutor<'a>, m: &'a model::User) -> Result<u6
     let r = query("UPDATE users SET username=$1, password=$2 WHERE id=$3")
         .bind(&m.username)
         .bind(&m.password)
+        .bind(&m.id)
         .execute(c)
         .await?;
 

@@ -12,6 +12,7 @@ pub enum Kind {
     Bcrypt,
     NotExists,
     Chrono,
+    InvalidParameter,
 }
 
 #[derive(Debug)]
@@ -46,6 +47,9 @@ impl Error {
     }
     pub fn not_exists(msg: &str) -> Self {
         Self::from_str(Kind::NotExists, msg)
+    }
+    pub fn invalid_parameter(msg: &str) -> Self {
+        Self::from_str(Kind::InvalidParameter, msg)
     }
     pub fn code(&self) -> i32 {
         -1

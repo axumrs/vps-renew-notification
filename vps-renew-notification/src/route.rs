@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use axum::{
     middleware,
-    routing::{get, post},
+    routing::{get, post, put},
     Router,
 };
 
@@ -45,10 +45,16 @@ pub fn vps(state: Arc<AppState>) -> Router {
         )
         .with_state(state)
 }
+pub fn user(state: Arc<AppState>) -> Router {
+    Router::new()
+        .route("/change-password", put(handler::user::change_password))
+        .with_state(state)
+}
 
 pub fn manage(state: Arc<AppState>) -> Router {
     Router::new()
         .nest("/provider", provider(state.clone()))
         .nest("/vps", vps(state.clone()))
+        .nest("/user", user(state.clone()))
         .layer(middleware::from_fn_with_state(state, mw::get_user_auth))
 }
