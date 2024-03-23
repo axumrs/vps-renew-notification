@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
-use axum::{extract::State, response::IntoResponse, Json};
+use axum::{
+    extract::{Path, State},
+    response::IntoResponse,
+    Json,
+};
 use validator::Validate;
 
 use crate::{
@@ -67,4 +71,20 @@ pub async fn edit(
         .map_err(Error::from)
         .map_err(log_error(handler_name))?;
     Ok(Json(JsonResp::ok(AffResp { aff })))
+}
+
+pub async fn find(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> Result<Json<JsonResp<model::VPS>>> {
+    let handler_name = "vps/find";
+    let pool = get_conn(&state);
+    let v = db::vps::find(&*pool, &id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    if v.is_none() {
+        return Err(Error::not_exists("不存在的VPS"));
+    }
+    Ok(Json(JsonResp::ok(v.unwrap())))
 }
