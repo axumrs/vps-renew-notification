@@ -1,0 +1,8 @@
+DB.DSN=postgres://vps:vps@127.0.0.1:5432/vps
+DB.MAX_CONNS=5
+WEB.ADDR=127.0.0.1:56789
+JWT.SECRET_KEY=foobar
+JWT.EXPIRE=120
+BOT.TOKEN='YOUR_BOT_TOKEN'
+BOT.CHAT_ID=YOUR_CHAT_ID
+RUST_LOG='vps_renew_notification=debug'
