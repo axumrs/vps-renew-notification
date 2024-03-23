@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use axum::{
     extract::{Path, Query, State},
-    response::IntoResponse,
     Json,
 };
 use validator::Validate;
@@ -117,4 +116,17 @@ pub async fn find(
         return Err(Error::not_exists("不存在的VPS"));
     }
     Ok(Json(JsonResp::ok(v.unwrap())))
+}
+
+pub async fn del(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+) -> Result<Json<JsonResp<AffResp>>> {
+    let handler_name = "vps/del";
+    let pool = get_conn(&state);
+    let aff = db::vps::delete(&*pool, &id)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    Ok(Json(JsonResp::ok(AffResp { aff })))
 }
