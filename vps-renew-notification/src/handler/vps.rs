@@ -1,20 +1,50 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Path, State},
+    extract::{Path, Query, State},
     response::IntoResponse,
     Json,
 };
 use validator::Validate;
 
 use crate::{
-    chrono_from_str, db, model, payload, AffResp, AppState, Error, IDResp, JsonResp, Result,
+    chrono_from_str, db, filter, model, payload, AffResp, AppState, Error, IDResp, JsonResp, Result,
 };
 
 use super::helper::{get_conn, log_error};
 
-pub async fn list() -> impl IntoResponse {
-    "vps list"
+pub async fn list(
+    State(state): State<Arc<AppState>>,
+    Query(p): Query<payload::ListVps>,
+) -> Result<Json<JsonResp<Vec<model::VPS>>>> {
+    let handler_name = "vps/list";
+    let pool = get_conn(&state);
+    let sort: Option<String> = if let Some(s) = p.sort {
+        Some(
+            match s {
+                payload::ListVpsSort::ID => "id",
+                payload::ListVpsSort::IDDesc => "id DESC",
+                payload::ListVpsSort::Name => "name",
+                payload::ListVpsSort::NameDesc => "name DESC",
+                payload::ListVpsSort::Expire => "expire",
+                payload::ListVpsSort::ExpireDesc => "expire DESC",
+            }
+            .to_string(),
+        )
+    } else {
+        None
+    };
+    let f = filter::VpsListFilter {
+        name: p.name,
+        provider_id: p.provider_id,
+        sort,
+    };
+    let data = db::vps::list(&*pool, &f)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+
+    Ok(Json(JsonResp::ok(data)))
 }
 
 pub async fn add(

@@ -14,6 +14,12 @@ pub enum ListVpsSort {
 
     #[serde(rename = "id_desc")]
     IDDesc,
+
+    #[serde(rename = "expire")]
+    Expire,
+
+    #[serde(rename = "expire_desc")]
+    ExpireDesc,
 }
 
 #[derive(Deserialize)]
