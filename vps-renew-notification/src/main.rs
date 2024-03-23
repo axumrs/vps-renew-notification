@@ -4,7 +4,7 @@ use axum::Router;
 use dotenv::dotenv;
 use tokio::net::TcpListener;
 use tower_http::cors::{Any, CorsLayer};
-use vps_renew_notification::{config, AppState};
+use vps_renew_notification::{config, route, AppState};
 
 #[tokio::main]
 async fn main() {
@@ -26,13 +26,20 @@ async fn main() {
     });
 
     let app = Router::new()
+    .with_state(state.clone())
+        .nest("/auth",route::auth())
+        .nest("/", route::manage(state))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)
                 .allow_methods(Any)
                 .allow_headers(Any),
         )
-        .with_state(state);
+        // .layer(middleware::from_fn_with_state(
+        //     state.clone(),
+        //     mw::get_user_auth,
+        // ))
+        ;
 
     let tcp_listener = TcpListener::bind(&addr).await.unwrap();
 

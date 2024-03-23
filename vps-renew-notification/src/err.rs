@@ -1,9 +1,12 @@
-use axum::response::IntoResponse;
+use axum::{response::IntoResponse, Json};
+
+use crate::JsonResp;
 
 #[derive(Debug)]
 pub enum Kind {
     Db,
     Jwt,
+    Unauthorized,
 }
 
 #[derive(Debug)]
@@ -30,6 +33,12 @@ impl Error {
     pub fn from_str(kind: Kind, msg: &str) -> Self {
         Self::from_string(kind, msg.to_string())
     }
+    pub fn unauthorized() -> Self {
+        Self::from_str(Kind::Unauthorized, "未授权")
+    }
+    pub fn code(&self) -> i32 {
+        -1
+    }
 }
 
 impl std::fmt::Display for Error {
@@ -54,6 +63,7 @@ impl From<jsonwebtoken::errors::Error> for Error {
 
 impl IntoResponse for Error {
     fn into_response(self) -> axum::response::Response {
-        self.message.into_response()
+        let resp = JsonResp::err(self);
+        Json(resp).into_response()
     }
 }

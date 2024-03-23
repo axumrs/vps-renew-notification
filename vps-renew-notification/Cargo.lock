@@ -2472,6 +2472,7 @@ dependencies = [
  "dotenv",
  "jsonwebtoken",
  "serde",
+ "serde_json",
  "sha2",
  "sqlx",
  "tokio",
