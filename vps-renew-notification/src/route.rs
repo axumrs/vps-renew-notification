@@ -31,7 +31,7 @@ pub fn provider(state: Arc<AppState>) -> Router {
 
 pub fn vps(state: Arc<AppState>) -> Router {
     Router::new()
-        .route("/", get(handler::vps::list))
+        .route("/", get(handler::vps::list).post(handler::vps::add))
         .with_state(state)
 }
 

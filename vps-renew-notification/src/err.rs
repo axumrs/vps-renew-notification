@@ -11,6 +11,7 @@ pub enum Kind {
     IncorrectAuth,
     Bcrypt,
     NotExists,
+    Chrono,
 }
 
 #[derive(Debug)]
@@ -80,6 +81,12 @@ impl From<validator::ValidationErrors> for Error {
 impl From<bcrypt::BcryptError> for Error {
     fn from(e: bcrypt::BcryptError) -> Self {
         Self::with_cause(Kind::Bcrypt, Box::new(e))
+    }
+}
+
+impl From<chrono::ParseError> for Error {
+    fn from(e: chrono::ParseError) -> Self {
+        Self::with_cause(Kind::Chrono, Box::new(e))
     }
 }
 

@@ -1,3 +1,4 @@
+mod chrono;
 pub mod config;
 pub mod db;
 mod err;
@@ -13,6 +14,7 @@ mod resp;
 pub mod route;
 mod state;
 
+pub use chrono::*;
 pub use err::{Error, Kind as ErrorKind};
 pub use resp::*;
 pub use state::*;
