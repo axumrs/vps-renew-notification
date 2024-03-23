@@ -7,6 +7,9 @@ pub enum Kind {
     Db,
     Jwt,
     Unauthorized,
+    Validate,
+    IncorrectAuth,
+    Bcrypt,
 }
 
 #[derive(Debug)]
@@ -36,6 +39,9 @@ impl Error {
     pub fn unauthorized() -> Self {
         Self::from_str(Kind::Unauthorized, "未授权")
     }
+    pub fn incorrect_auth() -> Self {
+        Self::from_str(Kind::IncorrectAuth, "用户名/密码错误")
+    }
     pub fn code(&self) -> i32 {
         -1
     }
@@ -58,6 +64,18 @@ impl From<sqlx::Error> for Error {
 impl From<jsonwebtoken::errors::Error> for Error {
     fn from(e: jsonwebtoken::errors::Error) -> Self {
         Self::with_cause(Kind::Jwt, Box::new(e))
+    }
+}
+
+impl From<validator::ValidationErrors> for Error {
+    fn from(e: validator::ValidationErrors) -> Self {
+        Self::with_cause(Kind::Validate, Box::new(e))
+    }
+}
+
+impl From<bcrypt::BcryptError> for Error {
+    fn from(e: bcrypt::BcryptError) -> Self {
+        Self::with_cause(Kind::Bcrypt, Box::new(e))
     }
 }
 

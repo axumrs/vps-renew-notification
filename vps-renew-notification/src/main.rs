@@ -26,20 +26,14 @@ async fn main() {
     });
 
     let app = Router::new()
-    .with_state(state.clone())
-        .nest("/auth",route::auth())
+        .nest("/auth", route::auth(state.clone()))
         .nest("/", route::manage(state))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)
                 .allow_methods(Any)
                 .allow_headers(Any),
-        )
-        // .layer(middleware::from_fn_with_state(
-        //     state.clone(),
-        //     mw::get_user_auth,
-        // ))
-        ;
+        );
 
     let tcp_listener = TcpListener::bind(&addr).await.unwrap();
 

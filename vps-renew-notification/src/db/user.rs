@@ -45,3 +45,25 @@ pub async fn find<'a>(
 
     Ok(m)
 }
+
+#[cfg(test)]
+mod test {
+    use crate::{id, model, password};
+
+    #[tokio::test]
+    async fn test_create_user() {
+        let dsn =
+            std::env::var("PG_DSN").unwrap_or("postgres://vps:vps@127.0.0.1:5432/vps".to_string());
+        let pool = sqlx::PgPool::connect(&dsn).await.unwrap();
+        let id = id::new();
+        let password = password::hash("axum.rs").unwrap();
+        let m = model::User {
+            id,
+            username: "axum.rs".to_string(),
+            password,
+            dateline: chrono::Local::now(),
+        };
+        let id = super::create(&pool, &m).await.unwrap();
+        println!("{id}");
+    }
+}

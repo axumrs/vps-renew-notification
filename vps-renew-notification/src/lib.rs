@@ -7,6 +7,8 @@ pub mod id;
 pub mod jwt;
 pub mod middleware;
 pub mod model;
+pub mod password;
+pub mod payload;
 mod resp;
 pub mod route;
 mod state;
