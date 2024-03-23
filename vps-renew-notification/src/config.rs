@@ -15,12 +15,18 @@ pub struct JwtConfig {
     pub secret_key: String,
     pub expire: u32,
 }
+#[derive(Deserialize)]
+pub struct BotConfig {
+    pub token: String,
+    pub chat_id: String,
+}
 
 #[derive(Deserialize)]
 pub struct Config {
     pub db: DatabaseConfig,
     pub web: WebConfig,
     pub jwt: JwtConfig,
+    pub bot: BotConfig,
 }
 
 impl Config {

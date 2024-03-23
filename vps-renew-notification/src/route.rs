@@ -50,11 +50,17 @@ pub fn user(state: Arc<AppState>) -> Router {
         .route("/change-password", put(handler::user::change_password))
         .with_state(state)
 }
+pub fn bot(state: Arc<AppState>) -> Router {
+    Router::new()
+        .route("/send-message", post(handler::bot::send_message))
+        .with_state(state)
+}
 
 pub fn manage(state: Arc<AppState>) -> Router {
     Router::new()
         .nest("/provider", provider(state.clone()))
         .nest("/vps", vps(state.clone()))
         .nest("/user", user(state.clone()))
+        .nest("/bot", bot(state.clone()))
         .layer(middleware::from_fn_with_state(state, mw::get_user_auth))
 }

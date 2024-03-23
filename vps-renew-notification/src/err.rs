@@ -13,6 +13,7 @@ pub enum Kind {
     NotExists,
     Chrono,
     InvalidParameter,
+    Reqwest,
 }
 
 #[derive(Debug)]
@@ -91,6 +92,12 @@ impl From<bcrypt::BcryptError> for Error {
 impl From<chrono::ParseError> for Error {
     fn from(e: chrono::ParseError) -> Self {
         Self::with_cause(Kind::Chrono, Box::new(e))
+    }
+}
+
+impl From<reqwest::Error> for Error {
+    fn from(e: reqwest::Error) -> Self {
+        Self::with_cause(Kind::Reqwest, Box::new(e))
     }
 }
 

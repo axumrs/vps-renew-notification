@@ -13,6 +13,7 @@ pub mod payload;
 mod resp;
 pub mod route;
 mod state;
+pub mod tg;
 
 pub use chrono::*;
 pub use err::{Error, Kind as ErrorKind};

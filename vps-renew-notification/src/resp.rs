@@ -41,3 +41,7 @@ pub struct IDResp {
 pub struct AffResp {
     pub aff: u64,
 }
+#[derive(Deserialize, Serialize)]
+pub struct BotResp {
+    pub code: u16,
+}
