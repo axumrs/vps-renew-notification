@@ -19,6 +19,7 @@ pub struct JwtConfig {
 pub struct BotConfig {
     pub token: String,
     pub chat_id: String,
+    pub sleep_duration: u32,
 }
 
 #[derive(Deserialize)]

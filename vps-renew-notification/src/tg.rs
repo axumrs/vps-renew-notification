@@ -18,7 +18,7 @@ pub async fn send_message(token: &str, chat_id: &str, text: &str) -> Result<Stat
         .await
         .map_err(Error::from)?;
 
-    tracing::debug!("{:?}", resp);
+    // tracing::debug!("{:?}", resp);
 
     Ok(resp.status())
 }
