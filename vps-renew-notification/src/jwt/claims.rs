@@ -51,7 +51,7 @@ impl<T: Serialize + DeserializeOwned> Claims<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserClaimsData {
     pub id: String,
     pub username: String,

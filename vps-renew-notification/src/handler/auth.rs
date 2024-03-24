@@ -3,14 +3,14 @@ use std::sync::Arc;
 use axum::{extract::State, Json};
 use validator::Validate;
 
-use crate::{db, filter, jwt, password, payload, AppState, Error, JsonResp, Result};
+use crate::{db, filter, jwt, password, payload, AppState, Error, JsonResp, LoginResp, Result};
 
 use super::helper::{get_conn, log_error};
 
 pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(p): Json<payload::Login>,
-) -> Result<Json<JsonResp<jwt::AuthBody>>> {
+) -> Result<Json<JsonResp<LoginResp>>> {
     let handler_name = "auth/login";
 
     p.validate()
@@ -36,7 +36,8 @@ pub async fn login(
         id: u.id,
         username: u.username,
     };
-    let data = jwt::encode(&state.cfg.jwt.secret_key, state.cfg.jwt.expire, ucd)?;
+    let auth = jwt::encode(&state.cfg.jwt.secret_key, state.cfg.jwt.expire, ucd.clone())?;
+    let data = LoginResp { auth, data: ucd };
 
     Ok(Json(JsonResp::ok(data)))
 }

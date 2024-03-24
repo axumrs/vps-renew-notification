@@ -1,6 +1,6 @@
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use crate::Error;
+use crate::{jwt, Error};
 
 #[derive(Serialize, Deserialize)]
 pub struct JsonResp<T> {
@@ -44,4 +44,10 @@ pub struct AffResp {
 #[derive(Deserialize, Serialize)]
 pub struct BotResp {
     pub code: u16,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct LoginResp {
+    pub auth: jwt::AuthBody,
+    pub data: jwt::UserClaimsData,
 }

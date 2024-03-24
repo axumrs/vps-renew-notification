@@ -24,7 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Mask transparent="none" v-if="isShow">
+  <Mask transparent="none" v-if="isShow" z="z-[100]">
     <div
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 bg-black/80 rounded text-white shadow"
     >

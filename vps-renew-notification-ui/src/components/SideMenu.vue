@@ -1,6 +1,7 @@
 <script setup lang="ts" name="SideMenu">
 import { Server, DatabaseZap, Bell, LockKeyhole } from "lucide-vue-next";
 import MenuGroup from "./Menu.vue";
+import { type Menu } from "@/types/menu";
 
 const menu: Menu[] = [
   {

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { ChevronDown as ArrowIcon } from "lucide-vue-next";
 import MenuItem from "./MenuItem.vue";
+import { type Menu } from "@/types/menu";
 
 const props = defineProps<{ menu: Menu; expand?: boolean }>();
 
