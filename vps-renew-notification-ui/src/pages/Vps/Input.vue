@@ -65,7 +65,6 @@ const submitHanlder = () => {
 
 <template>
   <PageTitle>{{ title }}VPS</PageTitle>
-  {{ vps }}
 
   <Form @submit="submitHanlder">
     <Input label="名称" v-model="vps.name" required />

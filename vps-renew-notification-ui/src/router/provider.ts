@@ -12,5 +12,10 @@ export default {
       path: "add",
       component: () => import("@/pages/Provider/Input.vue"),
     },
+    {
+      name: "provider-edit",
+      path: "edit/:id",
+      component: () => import("@/pages/Provider/Input.vue"),
+    },
   ],
 };
