@@ -7,9 +7,10 @@ import Form from "@/components/Form.vue";
 import useFetch from "@/hooks/useFetch";
 import { useStatusStore } from "@/store/status";
 import { onMounted, reactive, ref } from "vue";
+import dayjs from "dayjs";
 
 const { setOkMsg, setMsg } = useStatusStore();
-const { get, put } = useFetch();
+const { get, put, post } = useFetch();
 
 const r = useRoute();
 const { id } = r.params;
@@ -21,7 +22,7 @@ const emptyVps: VPS = {
   id: "",
   provider_id: "",
   name: "",
-  expire: "",
+  expire: dayjs().format("YYYY-MM-DDT00:00:00+08:00"),
   dateline: "",
 };
 const vps = reactive<VPS>(emptyVps);
@@ -48,8 +49,15 @@ onMounted(() => {
 });
 
 const submitHanlder = () => {
-  put(`/vps`, vps).then(() => {
-    setOkMsg("修改成功");
+  if (id) {
+    put(`/vps`, vps).then(() => {
+      setOkMsg("修改成功");
+      router.push("/vps");
+    });
+    return;
+  }
+  post(`/vps`, vps).then(() => {
+    setOkMsg("添加成功");
     router.push("/vps");
   });
 };
@@ -57,7 +65,7 @@ const submitHanlder = () => {
 
 <template>
   <PageTitle>{{ title }}VPS</PageTitle>
-  {{ providerList }}
+  {{ vps }}
 
   <Form @submit="submitHanlder">
     <Input label="名称" v-model="vps.name" required />

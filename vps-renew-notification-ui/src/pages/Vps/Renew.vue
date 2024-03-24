@@ -1,6 +1,6 @@
 <script setup lang="ts" name="VpsRenewPage">
 import { onMounted, ref } from "vue";
-import { CalendarDays } from "lucide-vue-next";
+import { CalendarDays, DatabaseZap as ProviderIcon } from "lucide-vue-next";
 import PageTitle from "@/components/PageTitle.vue";
 import Button from "@/components/Button.vue";
 import useFetch from "@/hooks/useFetch";
@@ -10,13 +10,13 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const vpsList = ref<VPS[]>();
+const vpsList = ref<VPSWithProvider[]>();
 
 const { get, patch } = useFetch();
 const { setOkMsg } = useStatusStore();
 
 const loadVpsList = () => {
-  get("/vps").then((data: VPS[]) => {
+  get("/vps").then((data: VPSWithProvider[]) => {
     vpsList.value = data;
   });
 };
@@ -49,6 +49,10 @@ const renewHandler = (id: string) => {
       :key="v.id"
     >
       <h2 class="text-lg">{{ v.name }}</h2>
+      <div class="flex justify-start items-center gap-x-1">
+        <div><ProviderIcon :size="14" /></div>
+        <div>{{ v.provider_name }}</div>
+      </div>
       <div class="flex justify-start items-center gap-x-1 text-sm">
         <div><CalendarDays :size="14" /></div>
         <div>

@@ -3,5 +3,5 @@ type Provider = {
   name: string;
   renew_days: number;
   notify_days: number;
-  dateline: Date;
+  dateline: string;
 };
