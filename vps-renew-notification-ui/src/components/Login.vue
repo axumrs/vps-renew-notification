@@ -6,12 +6,14 @@ import Button from "@/components/Button.vue";
 import { useStatusStore } from "@/store/status";
 import { useAuthStore } from "@/store/auth";
 
-import { reactive, ref } from "vue";
+import useFetch from "@/hooks/useFetch";
+
+import { reactive } from "vue";
 
 const state = reactive({ username: "", password: "" });
-const loading = ref(false);
 const { setMsg } = useStatusStore();
 const { setLoginResp } = useAuthStore();
+const { post } = useFetch();
 
 const emit = defineEmits(["callback"]);
 
@@ -24,31 +26,35 @@ const loginHandler = () => {
     setMsg("请输入密码");
     return;
   }
-  loading.value = true;
 
-  fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-    method: "POST",
-    body: JSON.stringify(state),
-    headers: {
-      "content-type": "application/json",
-    },
-  })
-    .then((resp) => resp.json())
-    .then((resp: ApiResponse<LoginResponse>) => {
-      if (resp.code !== 0) {
-        setMsg(resp.msg);
-        return;
-      }
-      setLoginResp(resp.data!);
-      emit("callback");
-    })
-    .catch((e) => {
-      setMsg("请检查网络");
-      console.log(e);
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+  post("/auth/login", state).then((resp: LoginResponse) => {
+    setLoginResp(resp);
+    emit("callback");
+  });
+
+  // fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+  //   method: "POST",
+  //   body: JSON.stringify(state),
+  //   headers: {
+  //     "content-type": "application/json",
+  //   },
+  // })
+  //   .then((resp) => resp.json())
+  //   .then((resp: ApiResponse<LoginResponse>) => {
+  //     if (resp.code !== 0) {
+  //       setMsg(resp.msg);
+  //       return;
+  //     }
+  //     setLoginResp(resp.data!);
+  //     emit("callback");
+  //   })
+  //   .catch((e) => {
+  //     setMsg("请检查网络");
+  //     console.log(e);
+  //   })
+  //   .finally(() => {
+  //     loading.value = false;
+  //   });
 };
 </script>
 
@@ -59,9 +65,7 @@ const loginHandler = () => {
     <Input label="密码" type="password" v-model="state.password" />
     <template #buttons>
       <div>
-        <Button theme="primary" :loading="loading" @click="loginHandler"
-          >登录</Button
-        >
+        <Button theme="primary" @click="loginHandler">登录</Button>
       </div>
     </template>
   </Form>
