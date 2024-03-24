@@ -103,9 +103,7 @@ async fn renew_notify(state: Arc<AppState>) {
                     chrono::Local::now().format("%Y/%m/%d %H:%M:%S")
                 );
                 tracing::debug!("{}", &text);
-                tg::send_message(&state.cfg.bot.token, &state.cfg.bot.chat_id, &text)
-                    .await
-                    .unwrap();
+                tokio::spawn(send_msg(state.clone(), text.clone()));
             }
             tokio::time::sleep(tokio::time::Duration::from_secs(
                 state.cfg.bot.sleep_duration as u64,
@@ -113,4 +111,10 @@ async fn renew_notify(state: Arc<AppState>) {
             .await;
         }
     }
+}
+
+async fn send_msg(state: Arc<AppState>, text: String) {
+    tg::send_message(&state.cfg.bot.token, &state.cfg.bot.chat_id, &text)
+        .await
+        .unwrap();
 }
