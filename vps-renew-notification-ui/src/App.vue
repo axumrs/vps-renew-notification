@@ -4,10 +4,11 @@ import Login from "@/components/Login.vue";
 import Mask from "@/components/Mask.vue";
 import Loading from "@/components/Loading.vue";
 import Toad from "@/components/Toad.vue";
+import Message from "@/components/Message.vue";
 import { useStatusStore } from "@/store/status";
 import { useAuthStore } from "./store/auth";
 
-const { isLoading, msg, setMsg } = useStatusStore();
+const { isLoading, msg, setMsg, okMsg, setOkMsg } = useStatusStore();
 const { isLogined, loginResp } = useAuthStore();
 const checkIsLogined = () => {
   return isLogined();
@@ -26,6 +27,16 @@ const checkIsLogined = () => {
     "
     >{{ msg }}</Toad
   >
+  <Message
+    v-if="okMsg"
+    :callback="
+      () => {
+        setOkMsg('');
+      }
+    "
+    >{{ okMsg }}</Message
+  >
+
   <Mask transparent="full" v-if="!checkIsLogined()">
     <div
       class="absolute bg-white p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-80 rounded shadow"

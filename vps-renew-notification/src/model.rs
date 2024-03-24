@@ -25,3 +25,13 @@ pub struct User {
     pub password: String,
     pub dateline: chrono::DateTime<chrono::Local>,
 }
+
+#[derive(Debug, Default, Deserialize, Serialize, sqlx::FromRow)]
+pub struct VPSWithProvider {
+    pub id: String,
+    pub provider_id: String,
+    pub name: String,
+    pub expire: chrono::DateTime<chrono::Local>,
+    pub dateline: chrono::DateTime<chrono::Local>,
+    pub provider_name: String,
+}

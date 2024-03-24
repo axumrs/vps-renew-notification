@@ -13,7 +13,7 @@ dayjs.extend(duration);
 const vpsList = ref<VPS[]>();
 
 const { get, patch } = useFetch();
-const { setMsg } = useStatusStore();
+const { setOkMsg } = useStatusStore();
 
 const loadVpsList = () => {
   get("/vps").then((data: VPS[]) => {
@@ -25,12 +25,12 @@ onMounted(() => {
 });
 
 const renewHandler = (id: string) => {
+  if (!window.confirm("确认续期？")) {
+    return;
+  }
   patch(`/vps/${id}`).then(() => {
-    setMsg("续期成功");
-    const t = setTimeout(() => {
-      loadVpsList();
-      clearTimeout(t);
-    }, 3000);
+    setOkMsg("续期成功");
+    loadVpsList();
   });
 };
 </script>

@@ -43,9 +43,9 @@ pub async fn find<'a>(c: impl PgExecutor<'a>, id: &'a str) -> Result<Option<mode
 pub async fn list<'a>(
     c: impl PgExecutor<'a>,
     f: &'a filter::VpsListFilter,
-) -> Result<Vec<model::VPS>> {
+) -> Result<Vec<model::VPSWithProvider>> {
     let mut q =
-        QueryBuilder::new("SELECT id, provider_id, name, expire, dateline FROM vpss WHERE 1=1");
+        QueryBuilder::new("SELECT id, provider_id, name, expire, dateline,provider_name FROM v_vps_proiders WHERE 1=1");
     if let Some(name) = &f.name {
         q.push(" AND name ILIKE ").push_bind(format!("%{name}%"));
     }

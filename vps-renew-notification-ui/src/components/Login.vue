@@ -11,7 +11,7 @@ import useFetch from "@/hooks/useFetch";
 import { reactive } from "vue";
 
 const state = reactive({ username: "", password: "" });
-const { setMsg } = useStatusStore();
+const { setMsg, setOkMsg } = useStatusStore();
 const { setLoginResp } = useAuthStore();
 const { post } = useFetch();
 
@@ -29,6 +29,7 @@ const loginHandler = () => {
 
   post("/auth/login", state).then((resp: LoginResponse) => {
     setLoginResp(resp);
+    setOkMsg("你已成功登录");
     emit("callback");
   });
 

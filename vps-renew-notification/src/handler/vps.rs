@@ -15,7 +15,7 @@ use super::helper::{get_conn, log_error};
 pub async fn list(
     State(state): State<Arc<AppState>>,
     Query(p): Query<payload::ListVps>,
-) -> Result<Json<JsonResp<Vec<model::VPS>>>> {
+) -> Result<Json<JsonResp<Vec<model::VPSWithProvider>>>> {
     let handler_name = "vps/list";
     let pool = get_conn(&state);
     let sort: Option<String> = if let Some(s) = p.sort {

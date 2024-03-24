@@ -5,3 +5,9 @@ type VPS = {
   expire: Date;
   dateline: Date;
 };
+
+type VPSWithProvider =
+  | VPS
+  | {
+      provider_name: string;
+    };

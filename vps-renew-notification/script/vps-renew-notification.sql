@@ -22,4 +22,10 @@ CREATE TABLE IF NOT EXISTS "users" ( -- 用户
     UNIQUE(username)
 );
 
+CREATE VIEW "v_vps_proiders" AS
+SELECT v.id, v.name, v.provider_id, v.expire,v.dateline,p.name AS provider_name
+FROM "vpss" AS v
+INNER JOIN "providers" AS p
+ON v.provider_id = p.id;
+
 INSERT INTO users(id,username,password,dateline) VALUES ('cnv6hv4drfapni9tr4p0', 'axum.rs', '$2b$12$.meDv8XTuGC.HgYLSKohlejbsK80V2MhA/J.m838uIp88ytjd8qtS', '2024-03-23 05:30:36.310579+00');
