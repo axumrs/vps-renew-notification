@@ -5,6 +5,10 @@ import Mask from "@/components/Mask.vue";
 const cancelHandler = () => {
   window.history.back();
 };
+
+const okHandler = () => {
+  window.location.href = "/";
+};
 </script>
 
 <template>
@@ -14,7 +18,7 @@ const cancelHandler = () => {
     >
       <div class="text-center my-6">确定退出？</div>
       <div class="flex justify-between w-1/2 mx-auto">
-        <Button theme="primary">确定</Button>
+        <Button theme="primary" @click="okHandler">确定</Button>
         <Button @click="cancelHandler">取消</Button>
       </div>
     </div>

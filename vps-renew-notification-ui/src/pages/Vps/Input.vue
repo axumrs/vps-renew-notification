@@ -9,7 +9,7 @@ import { useStatusStore } from "@/store/status";
 import { onMounted, reactive, ref } from "vue";
 import dayjs from "dayjs";
 
-const { setOkMsg, setMsg } = useStatusStore();
+const { setOkMsg } = useStatusStore();
 const { get, put, post } = useFetch();
 
 const r = useRoute();
@@ -30,7 +30,7 @@ const vps = reactive<VPS>(emptyVps);
 const providerList = ref<Provider[]>();
 
 const loadProviderList = async () => {
-  get("/provider").then((resp: Provoider[]) => {
+  get("/provider").then((resp: Provider[]) => {
     providerList.value = resp;
   });
 };

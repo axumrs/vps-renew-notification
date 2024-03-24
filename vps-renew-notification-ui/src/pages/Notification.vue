@@ -2,24 +2,26 @@
 import PageTitle from "@/components/PageTitle.vue";
 import Input from "@/components/Input.vue";
 import Form from "@/components/Form.vue";
-import Button from "@/components/Button.vue";
+import { reactive } from "vue";
+import useFetch from "@/hooks/useFetch";
+import { useStatusStore } from "@/store/status";
 
-const testHandler = () => {
-  window.confirm("我们将发送一条测试信息到TG机器人，是否继续？");
+const msg = reactive({ text: "" });
+
+const { post } = useFetch();
+const { setOkMsg } = useStatusStore();
+
+const submitHanlder = () => {
+  post("/bot/send-message", msg).then(() => {
+    setOkMsg("消息发送成功");
+  });
 };
 </script>
 
 <template>
   <PageTitle>通知设置</PageTitle>
 
-  <Form>
-    <div class="flex justify-start items-end gap-x-2">
-      <div class="grow">
-        <Input label="TG机器人Token" />
-      </div>
-      <div class="shrink-0 relative">
-        <Button theme="info" @click="testHandler">测试</Button>
-      </div>
-    </div>
+  <Form @submit="submitHanlder">
+    <Input label="消息内容" v-model="msg.text" required />
   </Form>
 </template>

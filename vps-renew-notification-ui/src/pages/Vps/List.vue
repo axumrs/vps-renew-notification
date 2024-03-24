@@ -6,7 +6,7 @@ import useFetch from "@/hooks/useFetch";
 import dayjs from "dayjs";
 import { useStatusStore } from "@/store/status";
 
-const vpsList = ref<VPS[]>();
+const vpsList = ref<VPSWithProvider[]>();
 const { get, patch, del } = useFetch();
 const { setOkMsg } = useStatusStore();
 
