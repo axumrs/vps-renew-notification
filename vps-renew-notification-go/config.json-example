@@ -1,0 +1,18 @@
+{
+  "db": {
+    "dsn": "postgres://vps:vps@127.0.0.1:5432/vps",
+    "max_conns": 5
+  },
+  "web": {
+    "addr": "127.0.0.1:56789"
+  },
+  "jwt": {
+    "secret_key": "foobar",
+    "expire": 120
+  },
+  "bot": {
+    "token": "",
+    "chat_id": 1234567890,
+    "sleep_duration": 3600
+  }
+}
