@@ -53,7 +53,7 @@ BEGIN:
 				continue
 			}
 			// log.Println(vps.Name, expectNotifyDate, vps.Expire, int(vps.Expire.Sub(expectNotifyDate).Hours())/24)
-			if int(vps.Expire.Sub(expectNotifyDate).Hours())/24 <= notifyDays {
+			if int(vps.Expire.Sub(expectNotifyDate).Hours())/24 < notifyDays {
 				msg := fmt.Sprintf("%s即将过期(%s)，请及时续期！\n%s", vps.Name, vps.Expire.Format("2006-01-02"), time.Now().Format("2006/01/02 15:04:05"))
 				log.Println(msg)
 				go func() {

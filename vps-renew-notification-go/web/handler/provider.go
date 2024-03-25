@@ -68,7 +68,7 @@ func EditProvider(c *gin.Context) error {
 	aff, err := db.UpdateProvider(c.Request.Context(), state.Db, &model.Provider{
 		Name:       p.Name,
 		RenewDays:  p.RenewDays,
-		NotifyDays: p.RenewDays,
+		NotifyDays: p.NotifyDays,
 		ID:         p.ID,
 	})
 	if err != nil {
