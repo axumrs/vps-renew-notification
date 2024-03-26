@@ -172,7 +172,17 @@ pub async fn renew(
 
     // 修改时间
     let duration = chrono::TimeDelta::try_days(provider.renew_days as i64).unwrap();
-    let expire = v.expire + duration;
+    //let expire = v.expire + duration;
+    let expire = (chrono::Local::now() + duration)
+        .format("%Y-%m-%dT00:00:00+08:00")
+        .to_string();
+    let expire = chrono_from_str(&expire).map_err(log_error(handler_name))?;
+    tracing::debug!(
+        "duration: {:?}, expire: {:?}, renew_days: {}",
+        duration,
+        expire,
+        provider.renew_days
+    );
 
     let v = model::VPS { expire, ..v };
     let aff = match db::vps::update(&mut *tx, &v).await {

@@ -106,9 +106,11 @@ async fn renew_notify(state: Arc<AppState>) {
                 notify_msg.push(text);
             }
         }
-        notify_msg.push(chrono::Local::now().format("%Y/%m/%d %H:%M:%S").to_string());
+        if !notify_msg.is_empty() {
+            notify_msg.push(chrono::Local::now().format("%Y/%m/%d %H:%M:%S").to_string());
+        }
         let text = notify_msg.join("\n");
-        tracing::debug!("{:?}", notify_msg);
+        //tracing::debug!("{:?}", notify_msg);
 
         tokio::spawn(send_msg(state.clone(), text));
         tokio::time::sleep(tokio::time::Duration::from_secs(
