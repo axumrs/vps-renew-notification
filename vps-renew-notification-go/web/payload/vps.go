@@ -1,11 +1,13 @@
 package payload
 
-import "time"
+import (
+	"github.com/axumrs/vps-renew-notification-go/internal/types"
+)
 
 type AddVps struct {
-	Name       string    `json:"name" form:"name" binding:"required,max=50"`
-	ProviderID string    `json:"provider_id" form:"provider_id" binding:"required,len=20"`
-	Expire     time.Time `json:"expire" form:"expire" binding:"required"`
+	Name       string     `json:"name" form:"name" binding:"required,max=50"`
+	ProviderID string     `json:"provider_id" form:"provider_id" binding:"required,len=20"`
+	Expire     types.Date `json:"expire" form:"expire" binding:"required"`
 }
 
 type EditVps struct {

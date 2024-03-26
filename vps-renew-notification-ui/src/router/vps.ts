@@ -10,7 +10,7 @@ export default {
     {
       name: "vps-add",
       path: "add",
-      component: () => import("@/pages/Vps/Input.vue"),
+      component: () => import("@/pages/Vps/Add.vue"),
     },
     {
       name: "vps-renew",
@@ -20,7 +20,7 @@ export default {
     {
       name: "vps-edit",
       path: "edit/:id",
-      component: () => import("@/pages/Vps/Input.vue"),
+      component: () => import("@/pages/Vps/Edit.vue"),
     },
   ],
 };

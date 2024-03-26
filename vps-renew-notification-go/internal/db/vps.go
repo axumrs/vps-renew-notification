@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/axumrs/vps-renew-notification-go/internal/filter"
 	"github.com/axumrs/vps-renew-notification-go/internal/model"
@@ -14,7 +15,7 @@ import (
 // CreateVps 创建VPS
 func CreateVps(ctx context.Context, q sqlx.ExecerContext, m *model.VPS) (string, error) {
 	id := pkg.NewID()
-	if _, err := q.ExecContext(ctx, "INSERT INTO vpss (id, provider_id, name, expire, dateline) VALUES ($1, $2, $3, $4, $5)", id, m.ProviderID, m.Name, m.Expire, m.Dateline); err != nil {
+	if _, err := q.ExecContext(ctx, "INSERT INTO vpss (id, provider_id, name, expire, dateline) VALUES ($1, $2, $3, $4, $5)", id, m.ProviderID, m.Name, time.Time(m.Expire).In(time.Local), m.Dateline); err != nil {
 		return "", err
 	}
 	return id, nil
@@ -22,7 +23,7 @@ func CreateVps(ctx context.Context, q sqlx.ExecerContext, m *model.VPS) (string,
 
 // UpdateVps 更新Vps
 func UpdateVps(ctx context.Context, q sqlx.ExecerContext, m *model.VPS) (int64, error) {
-	r, err := q.ExecContext(ctx, "UPDATE vpss SET  provider_id=$1, name=$2, expire=$3 WHERE id=$4", m.ProviderID, m.Name, m.Expire, m.ID)
+	r, err := q.ExecContext(ctx, "UPDATE vpss SET  provider_id=$1, name=$2, expire=$3 WHERE id=$4", m.ProviderID, m.Name, time.Time(m.Expire).In(time.Local), m.ID)
 	if err != nil {
 		return 0, err
 	}

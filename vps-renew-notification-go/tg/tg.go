@@ -8,7 +8,6 @@ import (
 
 	"github.com/axumrs/vps-renew-notification-go/internal/db"
 	"github.com/axumrs/vps-renew-notification-go/internal/filter"
-	"github.com/axumrs/vps-renew-notification-go/internal/pkg"
 	"github.com/axumrs/vps-renew-notification-go/internal/state"
 )
 
@@ -46,20 +45,26 @@ BEGIN:
 				continue
 			}
 
+			loc, err := time.LoadLocation("Asia/Shanghai")
+			if err != nil {
+				log.Println("加载时区出错：", err)
+				continue
+			}
+
 			expectNotifyDateStr := time.Now().Add(time.Hour * time.Duration(notifyDays) * 24).Format("2006-01-02")
-			expectNotifyDate, err := time.Parse("2006-01-02", expectNotifyDateStr)
+			expectNotifyDate, err := time.ParseInLocation("2006-01-02", expectNotifyDateStr, loc)
 			if err != nil {
 				log.Println("解析时间出错")
 				continue
 			}
-			// log.Println(vps.Name, expectNotifyDate, vps.Expire, int(vps.Expire.Sub(expectNotifyDate).Hours())/24)
-			if int(vps.Expire.Sub(expectNotifyDate).Hours())/24 < notifyDays {
-				msg := fmt.Sprintf("%s即将过期(%s)，请及时续期！\n%s", vps.Name, vps.Expire.Format("2006-01-02"), time.Now().Format("2006/01/02 15:04:05"))
+			log.Println(vps.Name, expectNotifyDate, time.Time(vps.Expire).In(loc), int(time.Time(vps.Expire).Sub(expectNotifyDate).Hours())/24)
+			if int(time.Time(vps.Expire).Sub(expectNotifyDate).Hours())/24 < notifyDays {
+				msg := fmt.Sprintf("%s即将过期(%s)，请及时续期！\n%s", vps.Name, time.Time(vps.Expire).Format("2006-01-02"), time.Now().Format("2006/01/02 15:04:05"))
 				log.Println(msg)
-				go func() {
-					code, err := pkg.TgSentBotMessage(state.Cfg.Bot, msg)
-					log.Println("sendmsg code:", code, ", err:", err)
-				}()
+				// go func() {
+				// 	code, err := pkg.TgSentBotMessage(state.Cfg.Bot, msg)
+				// 	log.Println("sendmsg code:", code, ", err:", err)
+				// }()
 			}
 		}
 

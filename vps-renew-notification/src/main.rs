@@ -72,6 +72,8 @@ async fn renew_notify(state: Arc<AppState>) {
         .await
         .unwrap();
 
+        let mut notify_msg = vec![];
+
         for vps in vps_list.iter() {
             let provider_list: Vec<&model::Provider> = provider_list
                 .iter()
@@ -96,20 +98,23 @@ async fn renew_notify(state: Arc<AppState>) {
                 // )
                 // 发送通知
                 let text = format!(
-                    "{}@{}即将到期({})，请及时续期！\n{}",
+                    "{}@{}即将到期({})，请及时续期！",
                     vps.name,
                     vps.provider_name,
                     expire.format("%Y/%m/%d"),
-                    chrono::Local::now().format("%Y/%m/%d %H:%M:%S")
                 );
-                tracing::debug!("{}", &text);
-                tokio::spawn(send_msg(state.clone(), text.clone()));
+                notify_msg.push(text);
             }
-            tokio::time::sleep(tokio::time::Duration::from_secs(
-                state.cfg.bot.sleep_duration as u64,
-            ))
-            .await;
         }
+        notify_msg.push(chrono::Local::now().format("%Y/%m/%d %H:%M:%S").to_string());
+        let text = notify_msg.join("\n");
+        tracing::debug!("{:?}", notify_msg);
+
+        tokio::spawn(send_msg(state.clone(), text));
+        tokio::time::sleep(tokio::time::Duration::from_secs(
+            state.cfg.bot.sleep_duration as u64,
+        ))
+        .await;
     }
 }
 

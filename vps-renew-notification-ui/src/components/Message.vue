@@ -5,13 +5,15 @@ const props = defineProps<{ callback?: () => void }>();
 const show = ref(true);
 
 onMounted(() => {
-  const t = setTimeout(() => {
-    show.value = false;
-    if (props.callback) {
-      props.callback();
-    }
-    clearTimeout(t);
-  }, 3000);
+  (async () => {
+    const t = setTimeout(() => {
+      show.value = false;
+      if (props.callback) {
+        props.callback();
+      }
+      clearTimeout(t);
+    }, 3000);
+  })().then();
 });
 </script>
 

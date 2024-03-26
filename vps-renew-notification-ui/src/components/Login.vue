@@ -9,13 +9,15 @@ import { useAuthStore } from "@/store/auth";
 import useFetch from "@/hooks/useFetch";
 
 import { reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const state = reactive({ username: "", password: "" });
 const { setMsg, setOkMsg } = useStatusStore();
 const { setLoginResp } = useAuthStore();
 const { post } = useFetch();
 
-const emit = defineEmits(["callback"]);
+const router = useRouter();
+const route = useRoute();
 
 const loginHandler = () => {
   if (!state.username) {
@@ -28,34 +30,19 @@ const loginHandler = () => {
   }
 
   post("/auth/login", state).then((resp: LoginResponse) => {
-    setLoginResp(resp);
-    setOkMsg("你已成功登录");
-    emit("callback");
+    Promise.all([
+      (async () => {
+        setLoginResp(resp);
+      })(),
+      (async () => {
+        const to = route.query.to?.toString() || "/";
+        router.replace(to);
+      })(),
+      (async () => {
+        setOkMsg("你已成功登录");
+      })(),
+    ]).then();
   });
-
-  // fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-  //   method: "POST",
-  //   body: JSON.stringify(state),
-  //   headers: {
-  //     "content-type": "application/json",
-  //   },
-  // })
-  //   .then((resp) => resp.json())
-  //   .then((resp: ApiResponse<LoginResponse>) => {
-  //     if (resp.code !== 0) {
-  //       setMsg(resp.msg);
-  //       return;
-  //     }
-  //     setLoginResp(resp.data!);
-  //     emit("callback");
-  //   })
-  //   .catch((e) => {
-  //     setMsg("请检查网络");
-  //     console.log(e);
-  //   })
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
 };
 </script>
 

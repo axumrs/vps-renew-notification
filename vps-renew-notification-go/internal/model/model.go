@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/axumrs/vps-renew-notification-go/internal/types"
+)
 
 type Provider struct {
 	ID         string    `json:"id" db:"id"`
@@ -11,11 +15,11 @@ type Provider struct {
 }
 
 type VPS struct {
-	ID         string    `json:"id" db:"id"`
-	ProviderID string    `json:"provider_id" db:"provider_id"`
-	Name       string    `json:"name" db:"name"`
-	Expire     time.Time `json:"expire" db:"expire"`
-	Dateline   time.Time `json:"dateline" db:"dateline"`
+	ID         string     `json:"id" db:"id"`
+	ProviderID string     `json:"provider_id" db:"provider_id"`
+	Name       string     `json:"name" db:"name"`
+	Expire     types.Date `json:"expire" db:"expire"`
+	Dateline   time.Time  `json:"dateline" db:"dateline"`
 }
 
 type User struct {

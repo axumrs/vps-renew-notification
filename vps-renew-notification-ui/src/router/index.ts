@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import provider from "./provider";
 import vps from "./vps";
+// import { useAuthStore } from "@/store/auth";
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -24,7 +25,23 @@ export default createRouter({
       path: "/notification",
       component: () => import("@/pages/Notification.vue"),
     },
+    {
+      name: "login",
+      path: "/login",
+      component: () => import("@/pages/Login.vue"),
+    },
     provider,
     vps,
   ],
 });
+
+// router.beforeEach(async () => {
+//   // const { isLogined } = useAuthStore();
+//   // if (to.name !== "login" && !isLogined()) {
+//   //   return { name: "login", query: { to: to.fullPath } };
+//   // }
+//   // return Promise.resolve();
+//   return;
+// });
+
+export default router;

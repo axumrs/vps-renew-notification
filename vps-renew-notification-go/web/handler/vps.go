@@ -9,6 +9,7 @@ import (
 	"github.com/axumrs/vps-renew-notification-go/internal/filter"
 	"github.com/axumrs/vps-renew-notification-go/internal/model"
 	"github.com/axumrs/vps-renew-notification-go/internal/state"
+	"github.com/axumrs/vps-renew-notification-go/internal/types"
 	"github.com/axumrs/vps-renew-notification-go/web/payload"
 	"github.com/axumrs/vps-renew-notification-go/web/resp"
 	"github.com/gin-gonic/gin"
@@ -127,9 +128,9 @@ func RenewVps(c *gin.Context) error {
 		return err
 	}
 
-	expire := v.Expire.Add(time.Duration(provider.RenewDays) * 24 * time.Hour)
+	expire := time.Time(v.Expire).Add(time.Duration(provider.RenewDays) * 24 * time.Hour)
 
-	v.Expire = expire
+	v.Expire = types.Date(expire)
 
 	aff, err := db.UpdateVps(c.Request.Context(), tx, v)
 	if err != nil {
