@@ -13,4 +13,6 @@ type VPSWithProvider = {
   expire: string;
   dateline: string;
   provider_name: string;
+  renew_days: number;
+  notify_days: number;
 };

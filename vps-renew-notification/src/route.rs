@@ -43,6 +43,7 @@ pub fn vps(state: Arc<AppState>) -> Router {
                 .delete(handler::vps::del)
                 .patch(handler::vps::renew),
         )
+        .route("/batch-renew", post(handler::vps::batch_renew))
         .with_state(state)
 }
 pub fn user(state: Arc<AppState>) -> Router {

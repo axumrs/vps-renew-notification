@@ -34,4 +34,6 @@ pub struct VPSWithProvider {
     pub expire: chrono::DateTime<chrono::Local>,
     pub dateline: chrono::DateTime<chrono::Local>,
     pub provider_name: String,
+    pub renew_days: i32,
+    pub notify_days: i32,
 }

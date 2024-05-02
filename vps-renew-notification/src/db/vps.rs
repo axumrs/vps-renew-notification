@@ -45,7 +45,7 @@ pub async fn list<'a>(
     f: &'a filter::VpsListFilter,
 ) -> Result<Vec<model::VPSWithProvider>> {
     let mut q =
-        QueryBuilder::new("SELECT id, provider_id, name, expire, dateline,provider_name FROM v_vps_proiders WHERE 1=1");
+        QueryBuilder::new("SELECT id, provider_id, name, expire, dateline,provider_name,renew_days,notify_days FROM v_vps_proiders WHERE 1=1");
     if let Some(name) = &f.name {
         q.push(" AND name ILIKE ").push_bind(format!("%{name}%"));
     }
@@ -63,4 +63,16 @@ pub async fn list<'a>(
     let ls = q.build_query_as().fetch_all(c).await?;
 
     Ok(ls)
+}
+
+pub async fn batch_find<'a>(
+    c: impl PgExecutor<'a>,
+    ids: &[&str],
+) -> Result<Vec<model::VPSWithProvider>> {
+    let mut q =
+        QueryBuilder::new("SELECT id, provider_id, name, expire, dateline,provider_name,renew_days,notify_days FROM v_vps_proiders WHERE id IN");
+    q.push_tuples(ids, |mut b, id| {
+        b.push_bind(id);
+    });
+    q.build_query_as().fetch_all(c).await
 }

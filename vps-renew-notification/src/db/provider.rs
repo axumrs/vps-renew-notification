@@ -63,3 +63,13 @@ pub async fn list<'a>(
 
     Ok(ls)
 }
+
+pub async fn batch_find<'a>(c: impl PgExecutor<'a>, ids: &[&str]) -> Result<Vec<model::Provider>> {
+    let mut q = QueryBuilder::new(
+        "SELECT id, name, renew_days, notify_days, dateline FROM providers WHERE id IN",
+    );
+    q.push_tuples(ids, |mut b, id| {
+        b.push_bind(id);
+    });
+    q.build_query_as().fetch_all(c).await
+}

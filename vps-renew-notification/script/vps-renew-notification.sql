@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS "users" ( -- 用户
     UNIQUE(username)
 );
 
-CREATE VIEW "v_vps_proiders" AS
-SELECT v.id, v.name, v.provider_id, v.expire,v.dateline,p.name AS provider_name
+CREATE OR REPLACE VIEW "v_vps_proiders" AS
+SELECT v.id, v.name, v.provider_id, v.expire,v.dateline,p.name AS provider_name,p.renew_days,p.notify_days
 FROM "vpss" AS v
 INNER JOIN "providers" AS p
 ON v.provider_id = p.id;

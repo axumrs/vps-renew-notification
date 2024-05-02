@@ -4,6 +4,7 @@ use axum::{
     extract::{Path, Query, State},
     Json,
 };
+
 use validator::Validate;
 
 use crate::{
@@ -135,7 +136,7 @@ pub async fn renew(
     State(state): State<Arc<AppState>>,
     Path(id): Path<String>,
 ) -> Result<Json<JsonResp<AffResp>>> {
-    let handler_name = "vps/del";
+    let handler_name = "vps/renew";
     let pool = get_conn(&state);
     let mut tx = pool
         .begin()
@@ -196,6 +197,66 @@ pub async fn renew(
             return Err(Error::from(err));
         }
     };
+
+    tx.commit()
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+    Ok(Json(JsonResp::ok(AffResp { aff })))
+}
+
+pub async fn batch_renew(
+    State(state): State<Arc<AppState>>,
+    Json(ids): Json<Vec<String>>,
+) -> Result<Json<JsonResp<AffResp>>> {
+    let handler_name = "vps/batch_renew";
+    if ids.len() < 1 {
+        return Err(Error::invalid_parameter("参数错误"));
+    }
+    let mut aff = 0u64;
+    let mut ids_str: Vec<&str> = Vec::with_capacity(ids.len());
+    for s in ids.iter() {
+        ids_str.push(s);
+    }
+    let conn = get_conn(&state);
+    let mut tx = conn
+        .begin()
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+
+    let ls = db::vps::batch_find(&mut *tx, &ids_str)
+        .await
+        .map_err(Error::from)
+        .map_err(log_error(handler_name))?;
+
+    for v in ls {
+        // 修改时间
+        let duration = chrono::TimeDelta::try_days(v.renew_days as i64).unwrap();
+        //let expire = v.expire + duration;
+        let expire = (chrono::Local::now() + duration)
+            .format("%Y-%m-%dT00:00:00+08:00")
+            .to_string();
+        let expire = chrono_from_str(&expire).map_err(log_error(handler_name))?;
+        let m = model::VPS {
+            id: v.id,
+            provider_id: v.provider_id,
+            name: v.name,
+            expire,
+            dateline: v.dateline,
+        };
+        match db::vps::update(&mut *tx, &m).await {
+            Ok(_) => aff += 1,
+            Err(err) => {
+                tx.rollback()
+                    .await
+                    .map_err(Error::from)
+                    .map_err(log_error(handler_name))?;
+                tracing::error!("{handler_name} - {:?}", err);
+                return Err(Error::from(err));
+            }
+        };
+    }
 
     tx.commit()
         .await

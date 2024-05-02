@@ -1,18 +1,27 @@
 <script setup lang="ts" name="VpsListPage">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import PageTitle from "@/components/PageTitle.vue";
 import Button from "@/components/Button.vue";
 import useFetch from "@/hooks/useFetch";
 import dayjs from "dayjs";
 import { useStatusStore } from "@/store/status";
 
-const vpsList = ref<VPSWithProvider[]>();
+const _vpsList = ref<VPSWithProvider[]>();
+const keyword = ref("");
+const vpsList = computed<VPSWithProvider[]>(() =>
+  _vpsList.value
+    ? _vpsList.value.filter(
+        (v) => v.name.toLowerCase().indexOf(keyword.value.toLowerCase()) >= 0
+      )
+    : []
+);
+
 const { get, patch, del } = useFetch();
 const { setOkMsg } = useStatusStore();
 
 const loadVpsList = () => {
   get("/vps").then((resp: VPSWithProvider[]) => {
-    vpsList.value = resp;
+    _vpsList.value = resp;
   });
 };
 
@@ -43,6 +52,19 @@ const delhandler = (id: string) => {
 
 <template>
   <PageTitle>VPS列表</PageTitle>
+
+  <div class="flex justify-start items-center gap-x-2 my-6">
+    <!-- <div>{{ checkedIds }}</div> -->
+    <div>
+      <div>
+        <input
+          class="border focus:outline-none px-3 py-1"
+          placeholder="输入关键字"
+          v-model.trim="keyword"
+        />
+      </div>
+    </div>
+  </div>
 
   <section>
     <table>
